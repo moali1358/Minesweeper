@@ -3,16 +3,15 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URI;
 
 public class MinesweeperGame extends JFrame {
-    private final int SIZE = 10;
-   // private final int MINES = 10;
-    private JButton[][] grid;
-    private boolean[][] mineField;
-    private boolean[][] visited;
+    private final JButton[][] grid;
+    private final boolean[][] mineField;
+    private final boolean[][] visited;
+    private final int size;
 
     public MinesweeperGame(int size, int mines) {
+        this.size = size;
         setTitle("Minesweeper");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -70,14 +69,13 @@ public class MinesweeperGame extends JFrame {
     }
 
     private void reveal(int x, int y) {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE || visited[x][y]) {
+        if (x < 0 || x >= size || y < 0 || y >= size || visited[x][y]) {
             return;
         }
 
         visited[x][y] = true;
         if (mineField[x][y]) {
             revealAllMines();
-            // openRickrollLink();
             gameOver();
             return;
         }
@@ -112,7 +110,7 @@ public class MinesweeperGame extends JFrame {
             for (int j = -1; j <= 1; j++) {
                 int newX = x + i;
                 int newY = y + j;
-                if (newX >= 0 && newX < SIZE && newY >= 0 && newY < SIZE && mineField[newX][newY]) {
+                if (newX >= 0 && newX < size && newY >= 0 && newY < size && mineField[newX][newY]) {
                     count++;
                 }
             }
@@ -122,8 +120,8 @@ public class MinesweeperGame extends JFrame {
 
     private void gameOver() {
         revealAllMines();
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 grid[i][j].setEnabled(false);
             }
         }
@@ -132,7 +130,7 @@ public class MinesweeperGame extends JFrame {
                 "Game Over", "Minesweeper Lost",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
-        switch (choice){
+        switch (choice) {
             case 0:
                 System.exit(0);
                 break;
@@ -144,8 +142,8 @@ public class MinesweeperGame extends JFrame {
     }
 
     private void gameWon() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (!mineField[i][j]) {
                     grid[i][j].setText("");
                     grid[i][j].setEnabled(false);
@@ -156,23 +154,14 @@ public class MinesweeperGame extends JFrame {
     }
 
     private void revealAllMines() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if (mineField[i][j]) {
                     grid[i][j].setText("*");
                 }
             }
         }
     }
-
-  /*  private void openRickrollLink() {
-        try {
-            Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=xvFZjo5PgG0"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-    } */
 
     public static void main(String[] args) {
         launchGame();
@@ -187,25 +176,20 @@ public class MinesweeperGame extends JFrame {
                 null, options, options[0]);
 
         final int size;
-        final int mines;
-        switch (choice) {
-            case 0:
-                size = 10;
-                mines = 10;
-                break;
-            case 1:
+        final int mines = switch (choice) {
+            case 1 -> {
                 size = 15;
-                mines = 20;
-                break;
-            case 2:
+                yield 20;
+            }
+            case 2 -> {
                 size = 20;
-                mines = 40;
-                break;
-            default:
+                yield 40;
+            }
+            default -> {
                 size = 10;
-                mines = 10;
-                break;
-        }
+                yield 10;
+            }
+        };
 
         // Start the game with chosen difficulty level
         SwingUtilities.invokeLater(() -> new MinesweeperGame(size, mines));
