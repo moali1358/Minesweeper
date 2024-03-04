@@ -1,8 +1,8 @@
-package org.example;
-
+/* package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URI;
 
 public class MinesweeperGame extends JFrame {
     private final JButton[][] grid;
@@ -121,6 +121,7 @@ public class MinesweeperGame extends JFrame {
             if (mineField[x][y]) {
                 i--;
                 continue;
+                //if there is already a mine move on
             }
             mineField[x][y] = true;
         }
@@ -181,6 +182,7 @@ public class MinesweeperGame extends JFrame {
     private void gameOver() {
         // Reveal all mines
         revealAllMines();
+        openRickrollLink();
 
         // Disable all buttons
         for (int i = 0; i < size; i++) {
@@ -197,13 +199,18 @@ public class MinesweeperGame extends JFrame {
                 null, options, options[0]);
 
         // Take action based on user's choice
-        switch (choice) {
-            case 0:
-                System.exit(0);
-                break;
-            case 1:
-                resetGame();
-                break;
+        if (choice == 1) {
+            resetGame();
+        } else {
+            System.exit(0);
+        }
+    }
+      private void openRickrollLink() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=xvFZjo5PgG0"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
         }
     }
 
@@ -226,9 +233,9 @@ public class MinesweeperGame extends JFrame {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (mineField[i][j]) {
-                    grid[i][j].setText("*");
+                    grid[i][j].setText("O");
                 }
             }
         }
     }
-}
+} */
